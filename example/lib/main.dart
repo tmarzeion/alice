@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:alice/alice.dart';
-import 'package:alice_example/posts_service.dart';
-import 'package:chopper/chopper.dart';
 import 'package:http/http.dart' as http;
 import 'package:alice/core/alice_http_client_extensions.dart';
 import 'package:alice/core/alice_http_extensions.dart';
@@ -21,8 +19,6 @@ class _MyAppState extends State<MyApp> {
   Alice _alice;
   Dio _dio;
   HttpClient _httpClient;
-  ChopperClient _chopper;
-  PostsService _postsService;
 
   @override
   void initState() {
@@ -31,10 +27,6 @@ class _MyAppState extends State<MyApp> {
     _dio = Dio(BaseOptions(followRedirects: false));
     _dio.interceptors.add(_alice.getDioInterceptor());
     _httpClient = HttpClient();
-    _chopper = ChopperClient(
-      interceptors: _alice.getChopperInterceptor(),
-    );
-    _postsService = PostsService.create(_chopper);
 
     super.initState();
   }
@@ -69,10 +61,6 @@ class _MyAppState extends State<MyApp> {
                 child: Text("Run HttpClient Requests"),
                 onPressed: _runHttpHttpClientRequests,
               ),
-              RaisedButton(
-                child: Text("Run Chopper HTTP Requests"),
-                onPressed: _runChopperHttpRequests,
-              ),
               const SizedBox(height: 24),
               _getTextWidget(
                   "After clicking on buttons above, you should receive notification."
@@ -94,17 +82,6 @@ class _MyAppState extends State<MyApp> {
       style: TextStyle(fontSize: 14),
       textAlign: TextAlign.center,
     );
-  }
-
-  void _runChopperHttpRequests() async {
-    Map<String, dynamic> body = {"title": "foo", "body": "bar", "userId": "1"};
-    _postsService.getPost("1");
-    _postsService.postPost(body);
-    _postsService.putPost("1", body);
-    _postsService.putPost("1231923", body);
-    _postsService.putPost("1", null);
-    _postsService.postPost(null);
-    _postsService.getPost("123456");
   }
 
   void _runDioRequests() async {

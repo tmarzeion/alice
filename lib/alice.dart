@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'package:alice/core/alice_chopper_response_interceptor.dart';
 import 'package:alice/core/alice_http_adapter.dart';
 import 'package:alice/model/alice_http_call.dart';
 
-import 'package:chopper/chopper.dart';
 import 'package:http/http.dart' as http;
 import 'package:alice/core/alice_core.dart';
 import 'package:alice/core/alice_dio_interceptor.dart';
@@ -44,8 +42,8 @@ class Alice {
         assert(darkTheme != null, "darkTheme can't be null"),
         assert(notificationIcon != null, "notificationIcon can't be null") {
     _navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
-    _aliceCore = AliceCore(_navigatorKey, showNotification,
-        showInspectorOnShake, darkTheme, notificationIcon);
+    _aliceCore =
+        AliceCore(_navigatorKey, darkTheme);
     _httpClientAdapter = AliceHttpClientAdapter(_aliceCore);
     _httpAdapter = AliceHttpAdapter(_aliceCore);
   }
@@ -91,11 +89,6 @@ class Alice {
   /// page where all listened http calls can be viewed.
   void showInspector() {
     _aliceCore.navigateToCallListScreen();
-  }
-
-  /// Get chopper interceptor. This should be added to Chopper instance.
-  List<ResponseInterceptor> getChopperInterceptor() {
-    return [AliceChopperInterceptor(_aliceCore)];
   }
 
   /// Handle generic http call. Can be used to any http client.
